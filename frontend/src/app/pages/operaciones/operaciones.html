@@ -1,0 +1,154 @@
+<h2>Operaciones bancarias</h2>
+<p class="subtitulo">
+  Cada operación se ejecuta en COBOL dentro del DLL y queda registrada en SQLite.
+</p>
+
+<div class="tarjeta">
+  <div class="tipos">
+    @for (t of tipos; track t.clave) {
+      <button
+        type="button"
+        class="tipo"
+        [class.seleccionado]="tipo() === t.clave"
+        (click)="tipo.set(t.clave)"
+      >
+        {{ t.etiqueta }}
+      </button>
+    }
+  </div>
+  <p class="descripcion">{{ descripcion() }}</p>
+
+  <div class="formulario">
+    <div class="campo">
+      <label>Cuenta origen</label>
+      <select [(ngModel)]="cuentaOrigen">
+        <option value="" disabled>Selecciona una cuenta…</option>
+        @for (c of cuentas(); track c.numero) {
+          <option [value]="c.numero">{{ c.numero }} — {{ c.titular }}</option>
+        }
+      </select>
+    </div>
+
+    @if (necesitaDestino()) {
+      <div class="campo">
+        <label>Cuenta destino</label>
+        <select [(ngModel)]="cuentaDestino">
+          <option value="" disabled>Selecciona destino…</option>
+          @for (c of cuentas(); track c.numero) {
+            @if (c.numero !== cuentaOrigen) {
+              <option [value]="c.numero">{{ c.numero }} — {{ c.titular }}</option>
+            }
+          }
+        </select>
+      </div>
+    }
+
+    @if (necesitaImporte()) {
+      <div class="campo">
+        <label>Importe (COP)</label>
+        <input type="number" min="0.01" step="0.01" [(ngModel)]="importe" placeholder="1500.50" />
+      </div>
+    }
+
+    <div class="campo">
+      <label>Timeout de la llamada COBOL</label>
+      <select [(ngModel)]="timeoutMs">
+        @for (t of timeouts; track t.valor) {
+          <option [value]="t.valor">{{ t.etiqueta }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="campo campo-demora">
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="simularDemora" />
+        <span
+          ><strong>Simular retraso de 3 segundos</strong>
+          </span
+        >
+      </label>
+    </div>
+
+    <div class="campo">
+      <button class="boton" (click)="operar()" [disabled]="ocupado() || !cuentaOrigen">
+        {{ ocupado() ? 'Procesando…' : 'Ejecutar en COBOL' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+@if (error()) {
+  <div class="alerta error">{{ error() }}</div>
+}
+
+@if (resultado(); as r) {
+  <div class="tarjeta resultado">
+    <div class="fila-principal">
+      <span [class]="chipResultado(r.resultado)">{{ r.resultado }}</span>
+      <span class="referencia"
+        >REF {{ r.referencia }} · retCode {{ r.retCode }} · {{ r.duracionMs }} ms</span
+      >
+    </div>
+    <p class="mensaje">{{ r.mensaje }}</p>
+    <div class="datos">
+      <div>
+        <span>Operación</span><b>{{ nombrar(r.tipo) }}</b>
+      </div>
+      <div>
+        <span>Importe</span><b>{{ fmtMonto(r.importe) }}</b>
+      </div>
+      <div>
+        <span>Comisión</span><b>{{ fmtMonto(r.comision) }}</b>
+      </div>
+      <div>
+        <span>Saldo origen final</span><b>{{ fmtMonto(r.saldoOrigenFinal) }}</b>
+      </div>
+      @if (r.saldoDestinoFinal !== null) {
+        <div>
+          <span>Saldo destino final</span><b>{{ fmtMonto(r.saldoDestinoFinal) }}</b>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<div class="tarjeta">
+  <h3>Historial de transacciones</h3>
+  @if (historial().length === 0) {
+    <p class="vacio">Aún no hay transacciones registradas.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Ref.</th>
+          <th>Operación</th>
+          <th>Cuenta(s)</th>
+          <th>Importe</th>
+          <th>Comisión</th>
+          <th>Resultado</th>
+          <th>Mensaje COBOL</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (t of historial(); track t.id) {
+          <tr>
+            <td>{{ t.referencia }}</td>
+            <td>{{ nombrar(t.tipo) }}</td>
+            <td>
+              {{ t.cuentaOrigen }}
+              @if (t.cuentaDestino) {
+                → {{ t.cuentaDestino }}
+              }
+            </td>
+            <td>{{ fmt(t.importeCents) }}</td>
+            <td>{{ fmt(t.comisionCents) }}</td>
+            <td>
+              <span [class]="chipResultado(t.resultado)">{{ t.resultado }}</span>
+            </td>
+            <td class="mensaje-tabla">{{ t.mensaje }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

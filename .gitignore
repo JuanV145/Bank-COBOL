@@ -1,0 +1,23 @@
+# Java / Maven
+backend/target/
+*.class
+
+# Base de datos local
+banco.db
+banco.db-*
+
+# DLL / bibliotecas compiladas (se generan con scripts/build_dll)
+dll/*.dll
+dll/*.so
+obj/
+
+# Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/out-tsc/
+
+# IDE
+.idea/
+.vscode/
+*.iml

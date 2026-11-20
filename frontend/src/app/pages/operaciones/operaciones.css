@@ -1,0 +1,110 @@
+.tipos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tipo {
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: transparent;
+  color: #cbd5e1;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tipo:hover {
+  border-color: #38bdf8;
+  color: #e2e8f0;
+}
+
+.tipo.seleccionado {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(99, 102, 241, 0.25));
+  border-color: #38bdf8;
+  color: #7dd3fc;
+}
+
+.descripcion {
+  margin: 12px 2px 18px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.resultado {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.fila-principal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.referencia {
+  color: #94a3b8;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.mensaje {
+  margin: 12px 0 16px;
+  color: #e2e8f0;
+  font-size: 15px;
+}
+
+.datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.datos div {
+  background: rgba(15, 23, 42, 0.55);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.datos span {
+  display: block;
+  font-size: 11px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 4px;
+}
+
+.datos b {
+  font-size: 15px;
+  color: #f1f5f9;
+}
+
+h3 {
+  margin: 0 0 14px;
+  color: #f1f5f9;
+  font-size: 16px;
+}
+
+.mensaje-tabla {
+  color: #94a3b8;
+  max-width: 260px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: #fafafa;
+  font-size: 13px;
+}
+
+.checkbox-label input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: #f59e0b;
+  cursor: pointer;
+}

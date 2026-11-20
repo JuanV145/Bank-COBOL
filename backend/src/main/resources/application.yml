@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: cobolbank
+  datasource:
+    url: jdbc:sqlite:banco.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    open-in-view: false
+  jackson:
+    default-property-inclusion: non_null
+
+# Configuracion CORS para clientes frontend
+cors:
+  allowed-origins: "http://localhost:4200"
+
+# Configuracion del puente Java <-> COBOL
+cobol:
+  # Nombre del DLL generado por scripts/build_dll.bat (sin extension)
+  library-name: COBOLBANK
+  # Carpeta donde se busca el DLL (relativa al directorio de ejecucion)
+  library-path: dll
+  # Timeout por defecto para las llamadas al runtime COBOL (ms)
+  timeout-ms: 3000
+
+logging:
+  level:
+    com.banco: INFO

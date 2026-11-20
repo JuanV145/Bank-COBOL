@@ -1,0 +1,68 @@
+<h2>Cuentas</h2>
+<p class="subtitulo">Inventario de cuentas persistido en SQLite (banco.db).</p>
+
+@if (error()) {
+  <div class="alerta error">{{ error() }}</div>
+}
+@if (mensaje()) {
+  <div class="alerta ok">{{ mensaje() }}</div>
+}
+
+<div class="tarjeta">
+  <h3>Nueva cuenta</h3>
+  <div class="formulario">
+    <div class="campo">
+      <label>Número</label>
+      <input maxlength="12" [(ngModel)]="numero" placeholder="001000000004" />
+    </div>
+    <div class="campo">
+      <label>Titular</label>
+      <input maxlength="40" [(ngModel)]="titular" placeholder="DIEGO LÓPEZ" />
+    </div>
+    <div class="campo">
+      <label>Tipo</label>
+      <select [(ngModel)]="tipo">
+        <option value="A">Ahorros</option>
+        <option value="C">Corriente</option>
+      </select>
+    </div>
+    <div class="campo">
+      <button class="boton" (click)="crear()" [disabled]="ocupado()">Crear cuenta</button>
+    </div>
+  </div>
+</div>
+
+<div class="tarjeta">
+  @if (cuentas().length === 0) {
+    <p class="vacio">No hay cuentas registradas todavía.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Titular</th>
+          <th>Tipo</th>
+          <th>Saldo</th>
+          <th>Estado</th>
+          <th>Apertura</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of cuentas(); track c.numero) {
+          <tr>
+            <td>{{ c.numero }}</td>
+            <td>{{ c.titular }}</td>
+            <td>{{ c.tipo === 'A' ? 'Ahorros' : 'Corriente' }}</td>
+            <td>{{ fmt(c.saldoCents) }}</td>
+            <td>
+              <span [class]="c.estado === 'ACTIVA' ? 'chip verde' : 'chip gris'">{{
+                c.estado
+              }}</span>
+            </td>
+            <td>{{ c.fechaApertura.slice(0, 10) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
